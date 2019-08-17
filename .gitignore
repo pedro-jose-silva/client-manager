@@ -1,0 +1,30 @@
+# Eclipse project file
+.settings/
+.classpath
+.project
+.metadata
+
+# Maven 
+target/
+
+# Compiled files
+*.class
+
+# Log files
+*.log
+
+# Binaries
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.war
+*.ear
+*.sar
+
+# OS
+.DS_Store
