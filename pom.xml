@@ -97,7 +97,7 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${project.basedir}/generated/java/source</outputDirectory>
-							<schemaDirectory>${project.basedir}/src/main/resources/com/apache/cxf/xml/json/service/entities</schemaDirectory>
+							<schemaDirectory>${project.basedir}/src/main/resources/pt/multicert/clientmanager/service/entities</schemaDirectory>
 							<schemaFiles>*.xsd</schemaFiles>
 							<schemaLanguage>XMLSCHEMA</schemaLanguage>
 							<extension>true</extension>
