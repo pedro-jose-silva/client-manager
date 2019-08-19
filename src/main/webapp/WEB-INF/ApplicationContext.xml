@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+ 
+    <!-- to activate annotations in beans already registered in the application
+        context -->
+    <context:annotation-config />
+ 
+    <!-- scans packages to find and register beans within the application context -->
+    <context:component-scan base-package="pt.multicert.clientmanager.service" />
+ 
+    <!-- turn on spring transaction annotation -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+ 
+    <!-- Transaction Manager -->
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+ 
+    <!-- Session Factory -->
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="annotatedClasses">
+            <list>
+                <value>pt.multicert.clientmanager.model.Client</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+ 
+    <!-- dataSource configuration -->
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver" />
+        <property name="url" value="jdbc:h2:./db/repository" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+    </bean>
+</beans>

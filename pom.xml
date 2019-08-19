@@ -6,7 +6,7 @@
 	<artifactId>client-manager</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>client-manager Maven Webapp</name>
+	<name>client-manager</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -17,12 +17,12 @@
 		<!-- Dependencies Versions -->
 		<spring.version>5.1.8.RELEASE</spring.version>
 		<cxf.version>3.3.2</cxf.version>
-		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-		<hibernate.version>5.4.4.Final</hibernate.version>
-		<httpclient.version>3.1</httpclient.version>
-		<jax.ws.rs>2.1.1</jax.ws.rs>
 		<jackson.version>1.9.13</jackson.version>
+		<hibernate.version>5.4.4.Final</hibernate.version>
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<junit.version>4.12</junit.version>
+		<mockito.version>3.0.0</mockito.version>
+		<h2.version>1.4.199</h2.version>
 	</properties>
 
 	<dependencies>
@@ -42,10 +42,20 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework</groupId> -->
+<!-- 			<artifactId>spring-webmvc</artifactId> -->
+<!-- 			<version>${spring.version}</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 		<!-- Apache CXF -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
 			<version>${cxf.version}</version>
 		</dependency>
 		<dependency>
@@ -58,12 +68,28 @@
 			<artifactId>cxf-rt-transports-http-jetty</artifactId>
 			<version>${cxf.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-ws-policy</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-wsdl</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
 		<!-- Jackson -->
 		<dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
 		<!-- Thymeleaf -->
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
@@ -82,10 +108,35 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- H2 DataBase -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+			<version>${h2.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>client-manager</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>2.0.1.Final</version>
+				<configuration>
+					<hostname>127.0.0.1</hostname>
+					<port>9990</port>
+					<username>admin</username>
+					<password>admin</password>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
