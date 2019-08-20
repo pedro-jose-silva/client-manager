@@ -33,13 +33,13 @@ public interface IClientService {
     @Path("updateClient")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_FORM_URLENCODED})
-    public String updateClient(ClientType clientType);
+    public Response updateClient(ClientType clientType);
  
     @DELETE
     @Path("deleteClient")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON,})
     @Produces({MediaType.APPLICATION_FORM_URLENCODED})
-    public String deleteClient(ClientType clientType);
+    public Response deleteClient(ClientType clientType);
  
     @GET
     @Path("getAllClients")

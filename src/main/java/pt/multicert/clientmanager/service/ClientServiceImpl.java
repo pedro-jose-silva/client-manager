@@ -2,6 +2,10 @@ package pt.multicert.clientmanager.service;
 
 import java.util.List;
 
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.ws.rs.core.Response;
 
 import org.hibernate.Session;
@@ -31,15 +35,12 @@ public class ClientServiceImpl implements IClientService{
         this.sessionFactory = sessionFactory;
     }
  
-    //@Transactional
+    @Transactional
 	@Override
 	public Response addClient(ClientType clientType) {
 		
-		Client newClient = new Client();
-		newClient.setNif(clientType.getNif());
-		newClient.setName(clientType.getName());
-		newClient.setAddress(clientType.getAddress());
-		newClient.setPhone(clientType.getPhone());
+		Client newClient = new Client(clientType.getNif(), clientType.getName(), 
+				clientType.getAddress(), clientType.getPhone());
 		
         Transaction transaction = null;
         try(Session session = getSessionFactory().openSession()) {
@@ -50,13 +51,11 @@ public class ClientServiceImpl implements IClientService{
             
             transaction.commit();
             
-            session.close();
-//        } 
-//        catch (ConstraintViolationException cve) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            return Response.serverError().entity("Client information cannot be empty.").build();
+        } catch (ConstraintViolationException cve) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return Response.serverError().entity("Client information cannot be empty.").build();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -70,22 +69,80 @@ public class ClientServiceImpl implements IClientService{
     @Transactional
 	@Override
 	public ClientType getClient(int clientNif) {
-		// TODO Auto-generated method stub
-		return null;
+    	ClientType clientType = new ClientType();
+		
+    	try(Session session = getSessionFactory().openSession()) {
+    		
+    		CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Client> criteriaQuery = builder.createQuery(Client.class);
+            Root<Client> root = criteriaQuery.from(Client.class);
+            criteriaQuery.select(root).where(builder.equal(root.get("nif"), clientNif));
+            Query query = session.createQuery(criteriaQuery);
+            Client client = (Client) query.getSingleResult();
+    		
+            clientType.setClientId(client.getClientId());
+        	clientType.setNif(client.getNif());
+        	clientType.setName(client.getName());
+        	clientType.setAddress(client.getAddress());
+        	clientType.setPhone(client.getPhone());
+    		
+    		return clientType;
+    		
+    	} catch (Exception e) {}
+
+        return clientType;
 	}
 
     @Transactional
 	@Override
-	public String updateClient(ClientType clientType) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response updateClient(ClientType clientType) {
+    	
+    	Client client = new Client(clientType.getClientId(), clientType.getNif(), clientType.getName(), 
+    			clientType.getAddress(), clientType.getPhone());
+		
+        Transaction transaction = null;
+        try(Session session = getSessionFactory().openSession()) {
+            
+            transaction = session.beginTransaction();
+            
+            session.update(client);
+            
+            transaction.commit();
+            
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+		
+		return Response.ok().build();
 	}
 
     @Transactional
 	@Override
-	public String deleteClient(ClientType clientType) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response deleteClient(ClientType clientType) {
+    	
+    	Client client = new Client(clientType.getClientId(), clientType.getNif(), clientType.getName(), 
+    			clientType.getAddress(), clientType.getPhone());
+		
+        Transaction transaction = null;
+        try(Session session = getSessionFactory().openSession()) {
+            
+            transaction = session.beginTransaction();
+            
+            session.delete(client);
+            
+            transaction.commit();
+            
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+		
+		return Response.ok().build();
 	}
 
     @Transactional
@@ -94,13 +151,13 @@ public class ClientServiceImpl implements IClientService{
     	
     	ClientListType clientListType = new ClientListType();
 		
-        //List<Client> clientList = sessionFactory.getCurrentSession().createCriteria(Client.class).list();
-    	System.out.println("Im here...");
     	try(Session session = getSessionFactory().openSession()) {
-    		List<Client> clientList = session.createQuery("from client", Client.class).list();
-    		System.out.println(clientList);
+    		
+    		List<Client> clientList = session.createQuery("from Client", Client.class).list();
+    		
     		for(Client client : clientList) {
             	ClientType clientType = new ClientType();
+            	clientType.setClientId(client.getClientId());
             	clientType.setNif(client.getNif());
             	clientType.setName(client.getName());
             	clientType.setAddress(client.getAddress());
@@ -108,11 +165,9 @@ public class ClientServiceImpl implements IClientService{
                 clientListType.getClientType().add(clientType);
             }
     		
-    		session.close();
-    		
     		return clientListType;
     		
-    	} catch (Exception e) {}
+    	} catch (Exception e) {System.out.println(e);}
 
         return clientListType;
 	}
@@ -120,8 +175,33 @@ public class ClientServiceImpl implements IClientService{
     @Transactional
 	@Override
 	public ClientListType getAllClientsWithName(String clientName) {
-		// TODO Auto-generated method stub
-		return null;
+    	
+    	ClientListType clientListType = new ClientListType();
+		
+    	try(Session session = getSessionFactory().openSession()) {
+    		
+    		CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Client> criteriaQuery = builder.createQuery(Client.class);
+            Root<Client> root = criteriaQuery.from(Client.class);
+            criteriaQuery.select(root).where(builder.like(root.get("name"), "%"+clientName+"%"));
+            Query query = session.createQuery(criteriaQuery);
+            List<Client> clientList = query.getResultList();
+            
+    		for(Client client : clientList) {
+            	ClientType clientType = new ClientType();
+            	clientType.setClientId(client.getClientId());
+            	clientType.setNif(client.getNif());
+            	clientType.setName(client.getName());
+            	clientType.setAddress(client.getAddress());
+            	clientType.setPhone(client.getPhone());
+                clientListType.getClientType().add(clientType);
+            }
+    		
+    		return clientListType;
+    		
+    	} catch (Exception e) {}
+
+        return clientListType;
 	}
 
 }

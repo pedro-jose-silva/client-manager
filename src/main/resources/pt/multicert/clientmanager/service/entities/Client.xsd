@@ -7,6 +7,7 @@
     <xsd:element name="ClientType">
         <xsd:complexType>
             <xsd:sequence>
+            	<xsd:element name="clientId" type="xsd:int" />
                 <xsd:element name="nif" type="xsd:string" />
                 <xsd:element name="name" type="xsd:string" />
                 <xsd:element name="address" type="xsd:string" />
