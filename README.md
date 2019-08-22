@@ -13,5 +13,4 @@
 * Update client: [PUT] /client-manager/clientService/updateClient
 * Delete client: [DELETE] /client-manager/clientService/deleteClient
 * Get all clients: [GET] /client-manager/clientService/getAllClients
-
-
+* Get all clients with a certain name: [GET] /client-manager/clientService/getAllClientsWithName/{name}
