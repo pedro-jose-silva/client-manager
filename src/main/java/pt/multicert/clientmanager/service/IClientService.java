@@ -19,37 +19,37 @@ public interface IClientService {
 	
 	@POST
     @Path("addClient")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_FORM_URLENCODED})
     public Response addClient(ClientType clientType);
  
     @GET
     @Path("getClient/{nif}")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public ClientType getClient(@PathParam("nif") int clientNif);
  
     @PUT
     @Path("updateClient")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_FORM_URLENCODED})
     public Response updateClient(ClientType clientType);
  
     @DELETE
     @Path("deleteClient")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON,})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_FORM_URLENCODED})
     public Response deleteClient(ClientType clientType);
  
     @GET
     @Path("getAllClients")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public ClientListType getAllClients();
     
     @GET
     @Path("getAllClientsWithName/{name}")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public ClientListType getAllClientsWithName(@PathParam("name") String clientName);
 }

@@ -141,8 +141,8 @@ public class ClientServiceImpl implements IClientService{
             }
             return Response.serverError().entity(e.getMessage()).build();
         }
-		
-		return Response.ok().build();
+
+        return Response.ok().build();
 	}
 
     @Transactional
