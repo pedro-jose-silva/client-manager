@@ -15,7 +15,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- Dependencies Versions -->
-		<spring.version>5.1.8.RELEASE</spring.version>
+		<spring.version>5.2.3.RELEASE</spring.version>
 		<cxf.version>3.3.2</cxf.version>
 		<jackson.version>1.9.13</jackson.version>
 		<hibernate.version>5.4.4.Final</hibernate.version>
